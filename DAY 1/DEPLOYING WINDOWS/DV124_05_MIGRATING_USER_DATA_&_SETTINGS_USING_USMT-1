@@ -1,0 +1,90 @@
+USER WITH OLDER COMPUTER AND OLDER OS.
+
+INSTEAD OF UPGRADING, GET A NEW COMPUTER.
+
+MIGRATE STUFF FROM THE OLD TO NEW.
+
+SIDE BY SIDE MIGRATION → OLD COMPUTER TO NEW COMPUTER.
+
+WIPE AND LOAD MIGRATION → NO NEW COMPUTER, KEEP EXISTING COMPUTER (W7), PUT W10 ON IT BUT NOT DO IN PLACE UPGRADE MAYBE BECAUSE OF EXISTING ISSUES THAT W7 HAD AND DIDN’T WANT THOSE ON W10. SO WE USE WIPE AND LOAD.
+
+YOU CAN FORMAT THE HD BUT YOU CAN ALSO JUST WIPE THE OS AND PROGRAM FILES WIPED AWAY, INSTALL W10, AND PUT THAT ON THERE. NEED TO BACK THEIR STUFF UP FIRST (SCAN STATE).
+
+CAN ALSO DO - HARD LINK MIGRATION - BACK STUFF UP ON THEIR VERY HARD DRIVE. WHEN WE WIPE AWAY W7 (OLD OS), AND PUT W10, THE FILES ARE ALREADY THERE.
+
+ALTERNATIVELY CAN BACK UP THEIR STUFF ACROSS THE NETWORK, FLASH DRIVE, HARD DRIVE, ETC., AND RESTORE BACK LATER.
+________________________________
+
+HOW TO GET INTO ENVIRONMENT TO USE USMT UTILITY? - IT’S A COMMAND LINE TOOL. NEED WINDOWS ADK.
+
+ONCE INSTALLED → SCROLL TO WINDOWS KITS → DEPLOYMENT AND IMAGING TOOLS ENVIRONMENT (COMMAND LINE)
+
+RIGHT CLICK, RUN AS ADMINISTRATOR.
+
+TO FIND USMT → cd..
+
+dir → USMT FOLDER LISTED
+
+cd u(tab, auto complete)
+
+dir → different versions (AMD64, ARM64, X86)
+
+AMD64 → 64 BIT PROCESSORS (INTEL, AMD)
+ARM64 → ARM PROCESSORS
+X86 → 32 BIT PROCESSORS
+
+cd amd64
+dir → bunch of files
+
+dir *.exe   (NEED EXE FILES)
+
+scanstate.exe (backup user info) loadstate.exe (restore)
+
+ADVICE : PULL UP MICROSOFT KNOWLEDGE BASE ARTICLE ON COMMANDS
+
+GOOGLE → SCANSTATE → MICROSOFT WEBSITE, SCANSTATE SYNTAX
+
+(scanstate) (specify location where backing up data to)
+
+IF BACKING UP TO SERVER - \\servername\backup
+(name of server, name of shared folder on the server)
+
+IN THIS VIDEO EXAMPLE : scanstate c:\backup
+IF DOING HARD LINK MIGRATION AND BACKING UP TO HARD DRIVE, THIS IS THE WAY YOU DO IT.
+
+NEXT : /i             (include certain types of files, these files called xml files)
+
+3 MAIN XML FILES THAT CONTAINS INFO ABOUT STUFF THAT NEEDS TO BE MIGRATED.
+
+SCANSTATE GREAT TO BACK UP STUFF, BUT ONE THING THAT HAS TO HAPPEN IS SCANSTATE HAS TO DOCUMENT WHERE ALL THE STUFF GOES SO WHEN YOU RUN LOADSTATE IT LOADS IT IN THE PROPER SPOTS.
+
+RECORD REGISTRY INFO, FILE LOCATIONS, ETC.
+
+1 ) MigApp.xml = Application settings for user (app settings, app data, registry values)
+
+2 ) MigDocs.xml = Doc Settings and locations
+
+3 ) MigUser.xml = User settings
+(usually gets backed up anyway - registry values for user account, wallpaper, appearance settings, etc)
+
+4 ) Another file called - Config.xml - switch called - /genconfig
+This file doesn’t automatically get created, you have to create using /genconfig switch.
+What this file does is allows you to exclude things if you want. For Ex : don’t want to back up the user's terabyte mp3 collection, can generate the file and edit the file and specify what you don’t want to include there.
+
+4) Config.xml = Exclude items
+/i:MigApp.xml /i:MigDocs.xml /i:MigUser.xml (last one gets added anyway)
+
+can add additional switches :
+
+/o (overwrite any files already in the c:\backup folder
+
+/vsc (volume shadow copy, back up any data that is currently in use, very good in scenarios where some of the files are being used on the hard drive right now while you are backing up).
+If you were doing this Windows PE and not a live computer, you wouldn't need this switch. On a live computer you definitely want to use this /vsc switch.
+
+This will back up encrypted files as well, but if you were perhaps maybe not an admin and couldn’t backup the encrypted files you can a) get them to decrypt their files to back them up or :
+
+/efs:skip   (skip any encrypted files)
+
+Click enter, now we are backing up the user information.
+
+PART 2 next.
